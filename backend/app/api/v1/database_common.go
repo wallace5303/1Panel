@@ -9,7 +9,6 @@ import (
 
 // @Tags Database Common
 // @Summary Load base info
-// @Description 获取数据库基础信息
 // @Accept json
 // @Param request body dto.OperationWithNameAndType true "request"
 // @Success 200 {object} dto.DBBaseInfo
@@ -32,7 +31,6 @@ func (b *BaseApi) LoadDBBaseInfo(c *gin.Context) {
 
 // @Tags Database Common
 // @Summary Load Database conf
-// @Description 获取数据库配置文件
 // @Accept json
 // @Param request body dto.OperationWithNameAndType true "request"
 // @Success 200
@@ -53,7 +51,6 @@ func (b *BaseApi) LoadDBFile(c *gin.Context) {
 
 // @Tags Database Common
 // @Summary Update conf by upload file
-// @Description 上传替换配置文件
 // @Accept json
 // @Param request body dto.DBConfUpdateByFile true "request"
 // @Success 200

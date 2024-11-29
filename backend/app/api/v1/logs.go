@@ -9,7 +9,6 @@ import (
 
 // @Tags Logs
 // @Summary Page login logs
-// @Description 获取系统登录日志列表分页
 // @Accept json
 // @Param request body dto.SearchLgLogWithPage true "request"
 // @Success 200 {object} dto.PageResult
@@ -35,7 +34,6 @@ func (b *BaseApi) GetLoginLogs(c *gin.Context) {
 
 // @Tags Logs
 // @Summary Page operation logs
-// @Description 获取系统操作日志列表分页
 // @Accept json
 // @Param request body dto.SearchOpLogWithPage true "request"
 // @Success 200 {object} dto.PageResult
@@ -61,7 +59,6 @@ func (b *BaseApi) GetOperationLogs(c *gin.Context) {
 
 // @Tags Logs
 // @Summary Clean operation logs
-// @Description 清空操作日志
 // @Accept json
 // @Param request body dto.CleanLog true "request"
 // @Success 200 {object} dto.PageResult
@@ -84,7 +81,6 @@ func (b *BaseApi) CleanLogs(c *gin.Context) {
 
 // @Tags Logs
 // @Summary Load system log files
-// @Description 获取系统日志文件列表
 // @Success 200
 // @Security ApiKeyAuth
 // @Router /logs/system/files [get]
@@ -100,7 +96,6 @@ func (b *BaseApi) GetSystemFiles(c *gin.Context) {
 
 // @Tags Logs
 // @Summary Load system logs
-// @Description 获取系统日志
 // @Success 200
 // @Security ApiKeyAuth
 // @Router /logs/system [post]

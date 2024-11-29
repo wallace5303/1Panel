@@ -11,7 +11,6 @@ import (
 
 // @Tags Device
 // @Summary Load device base info
-// @Description 获取设备基础信息
 // @Success 200 {object} dto.DeviceBaseInfo
 // @Security ApiKeyAuth
 // @Router /toolbox/device/base [post]
@@ -27,7 +26,6 @@ func (b *BaseApi) LoadDeviceBaseInfo(c *gin.Context) {
 
 // @Tags Device
 // @Summary list time zone options
-// @Description 获取系统可用时区选项
 // @Accept json
 // @Success 200 {Array} string
 // @Security ApiKeyAuth
@@ -44,7 +42,6 @@ func (b *BaseApi) LoadTimeOption(c *gin.Context) {
 
 // @Tags Device
 // @Summary load conf
-// @Description 获取系统配置文件
 // @Accept json
 // @Param request body dto.OperationWithName true "request"
 // @Success 200
@@ -67,7 +64,6 @@ func (b *BaseApi) LoadDeviceConf(c *gin.Context) {
 
 // @Tags Device
 // @Summary Update device conf by file
-// @Description 通过文件修改配置
 // @Accept json
 // @Param request body dto.UpdateByNameAndFile true "request"
 // @Success 200
@@ -88,7 +84,6 @@ func (b *BaseApi) UpdateDeviceByFile(c *gin.Context) {
 
 // @Tags Device
 // @Summary Update device
-// @Description 修改系统参数
 // @Accept json
 // @Param request body dto.SettingUpdate true "request"
 // @Success 200
@@ -111,7 +106,6 @@ func (b *BaseApi) UpdateDeviceConf(c *gin.Context) {
 
 // @Tags Device
 // @Summary Update device hosts
-// @Description 修改系统 hosts
 // @Success 200
 // @Security ApiKeyAuth
 // @Router /toolbox/device/update/host [post]
@@ -132,7 +126,6 @@ func (b *BaseApi) UpdateDeviceHost(c *gin.Context) {
 
 // @Tags Device
 // @Summary Update device passwd
-// @Description 修改系统密码
 // @Accept json
 // @Param request body dto.ChangePasswd true "request"
 // @Success 200
@@ -161,7 +154,6 @@ func (b *BaseApi) UpdateDevicePasswd(c *gin.Context) {
 
 // @Tags Device
 // @Summary Update device swap
-// @Description 修改系统 Swap
 // @Accept json
 // @Param request body dto.SwapHelper true "request"
 // @Success 200
@@ -183,7 +175,6 @@ func (b *BaseApi) UpdateDeviceSwap(c *gin.Context) {
 
 // @Tags Device
 // @Summary Check device DNS conf
-// @Description 检查系统 DNS 配置可用性
 // @Accept json
 // @Param request body dto.SettingUpdate true "request"
 // @Success 200
@@ -206,7 +197,6 @@ func (b *BaseApi) CheckDNS(c *gin.Context) {
 
 // @Tags Device
 // @Summary Scan system
-// @Description 扫描系统垃圾文件
 // @Success 200
 // @Security ApiKeyAuth
 // @Router /toolbox/scan [post]
@@ -217,7 +207,6 @@ func (b *BaseApi) ScanSystem(c *gin.Context) {
 
 // @Tags Device
 // @Summary Clean system
-// @Description 清理系统垃圾文件
 // @Accept json
 // @Param request body []dto.Clean true "request"
 // @Success 200

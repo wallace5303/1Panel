@@ -11,7 +11,6 @@ import (
 
 // @Tags App
 // @Summary Page app installed
-// @Description 分页获取已安装应用列表
 // @Accept json
 // @Param request body request.AppInstalledSearch true "request"
 // @Success 200
@@ -44,7 +43,6 @@ func (b *BaseApi) SearchAppInstalled(c *gin.Context) {
 
 // @Tags App
 // @Summary List app installed
-// @Description 获取已安装应用列表
 // @Accept json
 // @Success 200 array dto.AppInstallInfo
 // @Security ApiKeyAuth
@@ -60,7 +58,6 @@ func (b *BaseApi) ListAppInstalled(c *gin.Context) {
 
 // @Tags App
 // @Summary Check app installed
-// @Description 检查应用安装情况
 // @Accept json
 // @Param request body request.AppInstalledInfo true "request"
 // @Success 200 {object} response.AppInstalledCheck
@@ -81,7 +78,6 @@ func (b *BaseApi) CheckAppInstalled(c *gin.Context) {
 
 // @Tags App
 // @Summary Search app port by key
-// @Description 获取应用端口
 // @Accept json
 // @Param request body dto.OperationWithNameAndType true "request"
 // @Success 200 {integer} port
@@ -102,7 +98,6 @@ func (b *BaseApi) LoadPort(c *gin.Context) {
 
 // @Tags App
 // @Summary Search app password by key
-// @Description 获取应用连接信息
 // @Accept json
 // @Param request body dto.OperationWithNameAndType true "request"
 // @Success 200 {string} response.DatabaseConn
@@ -123,7 +118,6 @@ func (b *BaseApi) LoadConnInfo(c *gin.Context) {
 
 // @Tags App
 // @Summary Check before delete
-// @Description 删除前检查
 // @Accept json
 // @Param appInstallId path integer true "App install id"
 // @Success 200 {array} dto.AppResource
@@ -146,7 +140,6 @@ func (b *BaseApi) DeleteCheck(c *gin.Context) {
 // Sync app installed
 // @Tags App
 // @Summary Sync app installed
-// @Description 同步已安装应用列表
 // @Success 200
 // @Security ApiKeyAuth
 // @Router /apps/installed/sync [post]
@@ -161,7 +154,6 @@ func (b *BaseApi) SyncInstalled(c *gin.Context) {
 
 // @Tags App
 // @Summary Operate installed app
-// @Description 操作已安装应用
 // @Accept json
 // @Param request body request.AppInstalledOperate true "request"
 // @Success 200
@@ -182,7 +174,6 @@ func (b *BaseApi) OperateInstalled(c *gin.Context) {
 
 // @Tags App
 // @Summary Search app service by key
-// @Description 通过 key 获取应用 service
 // @Accept json
 // @Param key path string true "request"
 // @Success 200 {array} response.AppService
@@ -200,7 +191,6 @@ func (b *BaseApi) GetServices(c *gin.Context) {
 
 // @Tags App
 // @Summary Search app update version by install id
-// @Description 通过 install id 获取应用更新版本
 // @Accept json
 // @Param appInstallId path integer true "request"
 // @Success 200 {array} dto.AppVersion
@@ -221,7 +211,6 @@ func (b *BaseApi) GetUpdateVersions(c *gin.Context) {
 
 // @Tags App
 // @Summary Change app port
-// @Description 修改应用端口
 // @Accept json
 // @Param request body request.PortUpdate true "request"
 // @Success 200
@@ -242,7 +231,6 @@ func (b *BaseApi) ChangeAppPort(c *gin.Context) {
 
 // @Tags App
 // @Summary Search default config by key
-// @Description 通过 key 获取应用默认配置
 // @Accept json
 // @Param request body dto.OperationWithNameAndType true "request"
 // @Success 200 {string} content
@@ -264,7 +252,6 @@ func (b *BaseApi) GetDefaultConfig(c *gin.Context) {
 
 // @Tags App
 // @Summary Search params by appInstallId
-// @Description 通过 install id 获取应用参数
 // @Accept json
 // @Param appInstallId path string true "request"
 // @Success 200 {object} response.AppParam
@@ -286,7 +273,6 @@ func (b *BaseApi) GetParams(c *gin.Context) {
 
 // @Tags App
 // @Summary Change app params
-// @Description 修改应用参数
 // @Accept json
 // @Param request body request.AppInstalledUpdate true "request"
 // @Success 200
@@ -307,7 +293,6 @@ func (b *BaseApi) UpdateInstalled(c *gin.Context) {
 
 // @Tags App
 // @Summary ignore App Update
-// @Description 忽略应用升级版本
 // @Accept json
 // @Param request body request.AppInstalledIgnoreUpgrade true "request"
 // @Success 200

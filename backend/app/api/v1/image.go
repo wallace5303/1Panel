@@ -9,7 +9,6 @@ import (
 
 // @Tags Container Image
 // @Summary Page images
-// @Description 获取镜像列表分页
 // @Accept json
 // @Param request body dto.SearchWithPage true "request"
 // @Produce json
@@ -36,7 +35,6 @@ func (b *BaseApi) SearchImage(c *gin.Context) {
 
 // @Tags Container Image
 // @Summary List all images
-// @Description 获取所有镜像列表
 // @Produce json
 // @Success 200 {array} dto.ImageInfo
 // @Security ApiKeyAuth
@@ -52,7 +50,6 @@ func (b *BaseApi) ListAllImage(c *gin.Context) {
 
 // @Tags Container Image
 // @Summary load images options
-// @Description 获取镜像名称列表
 // @Produce json
 // @Success 200 {array} dto.Options
 // @Security ApiKeyAuth
@@ -68,7 +65,6 @@ func (b *BaseApi) ListImage(c *gin.Context) {
 
 // @Tags Container Image
 // @Summary Build image
-// @Description 构建镜像
 // @Accept json
 // @Param request body dto.ImageBuild true "request"
 // @Success 200 {string} log
@@ -92,7 +88,6 @@ func (b *BaseApi) ImageBuild(c *gin.Context) {
 
 // @Tags Container Image
 // @Summary Pull image
-// @Description 拉取镜像
 // @Accept json
 // @Param request body dto.ImagePull true "request"
 // @Success 200 {string} log
@@ -116,7 +111,6 @@ func (b *BaseApi) ImagePull(c *gin.Context) {
 
 // @Tags Container Image
 // @Summary Push image
-// @Description 推送镜像
 // @Accept json
 // @Param request body dto.ImagePush true "request"
 // @Success 200 {string} log
@@ -140,7 +134,6 @@ func (b *BaseApi) ImagePush(c *gin.Context) {
 
 // @Tags Container Image
 // @Summary Delete image
-// @Description 删除镜像
 // @Accept json
 // @Param request body dto.BatchDelete true "request"
 // @Success 200
@@ -163,7 +156,6 @@ func (b *BaseApi) ImageRemove(c *gin.Context) {
 
 // @Tags Container Image
 // @Summary Save image
-// @Description 导出镜像
 // @Accept json
 // @Param request body dto.ImageSave true "request"
 // @Success 200
@@ -186,7 +178,6 @@ func (b *BaseApi) ImageSave(c *gin.Context) {
 
 // @Tags Container Image
 // @Summary Tag image
-// @Description Tag 镜像
 // @Accept json
 // @Param request body dto.ImageTag true "request"
 // @Success 200
@@ -209,7 +200,6 @@ func (b *BaseApi) ImageTag(c *gin.Context) {
 
 // @Tags Container Image
 // @Summary Load image
-// @Description 导入镜像
 // @Accept json
 // @Param request body dto.ImageLoad true "request"
 // @Success 200

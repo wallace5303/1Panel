@@ -17,7 +17,6 @@ import (
 
 // @Tags Monitor
 // @Summary Load monitor datas
-// @Description 获取监控数据
 // @Param request body dto.MonitorSearch true "request"
 // @Success 200
 // @Security ApiKeyAuth
@@ -89,7 +88,6 @@ func (b *BaseApi) LoadMonitor(c *gin.Context) {
 
 // @Tags Monitor
 // @Summary Clean monitor datas
-// @Description 清空监控数据
 // @Success 200
 // @Security ApiKeyAuth
 // @Router /hosts/monitor/clean [post]

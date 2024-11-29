@@ -9,7 +9,6 @@ import (
 
 // @Tags OpenResty
 // @Summary Load OpenResty conf
-// @Description 获取 OpenResty 配置信息
 // @Success 200 {object} response.FileInfo
 // @Security ApiKeyAuth
 // @Router /openresty [get]
@@ -24,7 +23,6 @@ func (b *BaseApi) GetNginx(c *gin.Context) {
 
 // @Tags OpenResty
 // @Summary Load partial OpenResty conf
-// @Description 获取部分 OpenResty 配置信息
 // @Accept json
 // @Param request body request.NginxScopeReq true "request"
 // @Success 200 {array} response.NginxParam
@@ -46,7 +44,6 @@ func (b *BaseApi) GetNginxConfigByScope(c *gin.Context) {
 
 // @Tags OpenResty
 // @Summary Update OpenResty conf
-// @Description 更新 OpenResty 配置信息
 // @Accept json
 // @Param request body request.NginxConfigUpdate true "request"
 // @Success 200
@@ -67,7 +64,6 @@ func (b *BaseApi) UpdateNginxConfigByScope(c *gin.Context) {
 
 // @Tags OpenResty
 // @Summary Load OpenResty status info
-// @Description 获取 OpenResty 状态信息
 // @Success 200 {object} response.NginxStatus
 // @Security ApiKeyAuth
 // @Router /openresty/status [get]
@@ -82,7 +78,6 @@ func (b *BaseApi) GetNginxStatus(c *gin.Context) {
 
 // @Tags OpenResty
 // @Summary Update OpenResty conf by upload file
-// @Description 上传更新 OpenResty 配置文件
 // @Accept json
 // @Param request body request.NginxConfigFileUpdate true "request"
 // @Success 200
@@ -104,7 +99,6 @@ func (b *BaseApi) UpdateNginxFile(c *gin.Context) {
 
 // @Tags OpenResty
 // @Summary Clear OpenResty proxy cache
-// @Description 清理 OpenResty 代理缓存
 // @Success 200
 // @Security ApiKeyAuth
 // @Router /openresty/clear [post]

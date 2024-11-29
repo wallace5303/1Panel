@@ -10,7 +10,6 @@ import (
 
 // @Tags Host
 // @Summary Create host
-// @Description 创建主机
 // @Accept json
 // @Param request body dto.HostOperate true "request"
 // @Success 200
@@ -33,7 +32,6 @@ func (b *BaseApi) CreateHost(c *gin.Context) {
 
 // @Tags Host
 // @Summary Test host conn by info
-// @Description 测试主机连接
 // @Accept json
 // @Param request body dto.HostConnTest true "request"
 // @Success 200
@@ -51,7 +49,6 @@ func (b *BaseApi) TestByInfo(c *gin.Context) {
 
 // @Tags Host
 // @Summary Test host conn by host id
-// @Description 测试主机连接
 // @Accept json
 // @Param id path integer true "request"
 // @Success 200 {boolean} connStatus
@@ -70,7 +67,6 @@ func (b *BaseApi) TestByID(c *gin.Context) {
 
 // @Tags Host
 // @Summary Load host tree
-// @Description 加载主机树
 // @Accept json
 // @Param request body dto.SearchForTree true "request"
 // @Success 200 {array} dto.HostTree
@@ -93,7 +89,6 @@ func (b *BaseApi) HostTree(c *gin.Context) {
 
 // @Tags Host
 // @Summary Page host
-// @Description 获取主机列表分页
 // @Accept json
 // @Param request body dto.SearchHostWithPage true "request"
 // @Success 200 {array} dto.HostTree
@@ -119,7 +114,6 @@ func (b *BaseApi) SearchHost(c *gin.Context) {
 
 // @Tags Host
 // @Summary Delete host
-// @Description 删除主机
 // @Accept json
 // @Param request body dto.BatchDeleteReq true "request"
 // @Success 200
@@ -141,7 +135,6 @@ func (b *BaseApi) DeleteHost(c *gin.Context) {
 
 // @Tags Host
 // @Summary Update host
-// @Description 更新主机
 // @Accept json
 // @Param request body dto.HostOperate true "request"
 // @Success 200
@@ -207,7 +200,6 @@ func (b *BaseApi) UpdateHost(c *gin.Context) {
 
 // @Tags Host
 // @Summary Update host group
-// @Description 切换分组
 // @Accept json
 // @Param request body dto.ChangeHostGroup true "request"
 // @Success 200

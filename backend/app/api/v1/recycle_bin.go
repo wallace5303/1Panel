@@ -9,8 +9,7 @@ import (
 )
 
 // @Tags File
-// @Summary List RecycleBin files
-// @Description 获取回收站文件列表
+// @Summary List Recycle Bin files
 // @Accept json
 // @Param request body dto.PageInfo true "request"
 // @Success 200
@@ -33,8 +32,7 @@ func (b *BaseApi) SearchRecycleBinFile(c *gin.Context) {
 }
 
 // @Tags File
-// @Summary Reduce RecycleBin files
-// @Description 还原回收站文件
+// @Summary Reduce Recycle Bin files
 // @Accept json
 // @Param request body request.RecycleBinReduce true "request"
 // @Success 200
@@ -54,8 +52,7 @@ func (b *BaseApi) ReduceRecycleBinFile(c *gin.Context) {
 }
 
 // @Tags File
-// @Summary Clear RecycleBin files
-// @Description 清空回收站文件
+// @Summary Clear Recycle Bin files
 // @Accept json
 // @Success 200
 // @Security ApiKeyAuth
@@ -70,8 +67,7 @@ func (b *BaseApi) ClearRecycleBinFile(c *gin.Context) {
 }
 
 // @Tags File
-// @Summary Get RecycleBin status
-// @Description 获取回收站状态
+// @Summary Get Recycle Bin status
 // @Accept json
 // @Success 200
 // @Security ApiKeyAuth

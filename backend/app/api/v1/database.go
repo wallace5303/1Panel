@@ -11,7 +11,6 @@ import (
 
 // @Tags Database
 // @Summary Create database
-// @Description 创建远程数据库
 // @Accept json
 // @Param request body dto.DatabaseCreate true "request"
 // @Success 200
@@ -41,7 +40,6 @@ func (b *BaseApi) CreateDatabase(c *gin.Context) {
 
 // @Tags Database
 // @Summary Check database
-// @Description 检测远程数据库连接性
 // @Accept json
 // @Param request body dto.DatabaseCreate true "request"
 // @Success 200
@@ -67,7 +65,6 @@ func (b *BaseApi) CheckDatabase(c *gin.Context) {
 
 // @Tags Database
 // @Summary Page databases
-// @Description 获取远程数据库列表分页
 // @Accept json
 // @Param request body dto.DatabaseSearch true "request"
 // @Success 200 {object} dto.PageResult
@@ -93,7 +90,6 @@ func (b *BaseApi) SearchDatabase(c *gin.Context) {
 
 // @Tags Database
 // @Summary List databases
-// @Description 获取远程数据库列表
 // @Success 200 {array} dto.DatabaseOption
 // @Security ApiKeyAuth
 // @Router /databases/db/list/:type [get]
@@ -113,8 +109,7 @@ func (b *BaseApi) ListDatabase(c *gin.Context) {
 }
 
 // @Tags Database
-// @Summary List databases
-// @Description 获取数据库列表
+// @Summary Retrieve database list based on type
 // @Success 200 {array} dto.DatabaseItem
 // @Security ApiKeyAuth
 // @Router /databases/db/item/:type [get]
@@ -135,7 +130,6 @@ func (b *BaseApi) LoadDatabaseItems(c *gin.Context) {
 
 // @Tags Database
 // @Summary Get databases
-// @Description 获取远程数据库
 // @Success 200 {object} dto.DatabaseInfo
 // @Security ApiKeyAuth
 // @Router /databases/db/:name [get]
@@ -156,7 +150,6 @@ func (b *BaseApi) GetDatabase(c *gin.Context) {
 
 // @Tags Database
 // @Summary Check before delete remote database
-// @Description Mysql 远程数据库删除前检查
 // @Accept json
 // @Param request body dto.OperateByID true "request"
 // @Success 200 {array} string
@@ -178,7 +171,6 @@ func (b *BaseApi) DeleteCheckDatabase(c *gin.Context) {
 
 // @Tags Database
 // @Summary Delete database
-// @Description 删除远程数据库
 // @Accept json
 // @Param request body dto.DatabaseDelete true "request"
 // @Success 200
@@ -200,7 +192,6 @@ func (b *BaseApi) DeleteDatabase(c *gin.Context) {
 
 // @Tags Database
 // @Summary Update database
-// @Description 更新远程数据库
 // @Accept json
 // @Param request body dto.DatabaseUpdate true "request"
 // @Success 200
