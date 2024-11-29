@@ -378,6 +378,9 @@ func (w WebsiteService) CreateWebsite(create request.WebsiteCreate) (err error) 
 		switch runtime.Type {
 		case constant.RuntimePHP:
 			if runtime.Resource == constant.ResourceAppstore {
+				if !checkImageExist(nil, runtime.Image) {
+					return buserr.WithName("ErrImageNotExist", runtime.Name)
+				}
 				website.Proxy = fmt.Sprintf("127.0.0.1:%d", runtime.Port)
 			} else {
 				website.ProxyType = create.ProxyType
@@ -1085,6 +1088,7 @@ func (w WebsiteService) OpWebsiteHTTPS(ctx context.Context, req request.WebsiteH
 		websiteSSL.Provider = constant.Manual
 		websiteSSL.PrivateKey = privateKey
 		websiteSSL.Pem = certificate
+		websiteSSL.Status = constant.SSLReady
 
 		res.SSL = websiteSSL
 	}

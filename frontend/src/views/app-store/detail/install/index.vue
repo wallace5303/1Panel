@@ -95,8 +95,8 @@
                     <span class="input-help">{{ $t('app.gpuConfigHelper') }}</span>
                 </el-form-item>
                 <el-form-item pro="pullImage">
-                    <el-checkbox v-model="req.pullImage" :label="$t('container.forcePull')" size="large" />
-                    <span class="input-help">{{ $t('container.forcePullHelper') }}</span>
+                    <el-checkbox v-model="req.pullImage" :label="$t('app.pullImage')" size="large" />
+                    <span class="input-help">{{ $t('app.pullImageHelper') }}</span>
                 </el-form-item>
                 <el-form-item prop="editCompose">
                     <el-checkbox v-model="req.editCompose" :label="$t('app.editCompose')" size="large" />

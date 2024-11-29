@@ -86,6 +86,7 @@ const acceptParams = async (website: Website.WebsiteDTO) => {
         deleteBackup: false,
         forceDelete: false,
     };
+
     subSites.value = '';
     if (website.childSites && website.childSites.length > 0) {
         subSites.value = website.childSites.join(',');

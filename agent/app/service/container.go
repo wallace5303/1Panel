@@ -1087,6 +1087,29 @@ func calculateNetwork(network map[string]container.NetworkStats) (float64, float
 }
 
 func checkImageExist(client *client.Client, imageItem string) bool {
+	if client == nil {
+		var err error
+		client, err = docker.NewDockerClient()
+		if err != nil {
+			return false
+		}
+	}
+	images, err := client.ImageList(context.Background(), image.ListOptions{})
+	if err != nil {
+		return false
+	}
+
+	for _, img := range images {
+		for _, tag := range img.RepoTags {
+			if tag == imageItem || tag == imageItem+":latest" {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func checkImage(client *client.Client, imageItem string) bool {
 	images, err := client.ImageList(context.Background(), image.ListOptions{})
 	if err != nil {
 		return false

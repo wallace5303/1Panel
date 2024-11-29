@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"syscall"
 
 	"github.com/1Panel-dev/1Panel/agent/app/api/v2/helper"
 	"github.com/1Panel-dev/1Panel/agent/app/dto"
@@ -338,7 +339,11 @@ func (b *BaseApi) UploadFiles(c *gin.Context) {
 	mode := info.Mode()
 
 	fileOp := files.NewFileOp()
-
+	stat, ok := info.Sys().(*syscall.Stat_t)
+	uid, gid := -1, -1
+	if ok {
+		uid, gid = int(stat.Uid), int(stat.Gid)
+	}
 	success := 0
 	failures := make(buserr.MultiErr)
 	for _, file := range uploadFiles {
@@ -351,6 +356,7 @@ func (b *BaseApi) UploadFiles(c *gin.Context) {
 				global.LOG.Error(e)
 				continue
 			}
+			_ = os.Chown(dstDir, uid, gid)
 		}
 		tmpFilename := dstFilename + ".tmp"
 		if err := c.SaveUploadedFile(file, tmpFilename); err != nil {
@@ -377,6 +383,9 @@ func (b *BaseApi) UploadFiles(c *gin.Context) {
 			_ = os.Chmod(dstFilename, dstInfo.Mode())
 		} else {
 			_ = os.Chmod(dstFilename, mode)
+		}
+		if uid != -1 && gid != -1 {
+			_ = os.Chown(dstFilename, uid, gid)
 		}
 		success++
 	}

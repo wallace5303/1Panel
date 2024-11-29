@@ -36,6 +36,7 @@ type IBackupService interface {
 	DownloadRecord(info dto.DownloadRecord) (string, error)
 	DeleteRecordByName(backupType, name, detailName string, withDeleteFile bool) error
 	BatchDeleteRecord(ids []uint) error
+	ListAppRecords(name, detailName, fileName string) ([]model.BackupRecord, error)
 
 	ListFiles(req dto.OperateByID) []string
 
@@ -192,6 +193,20 @@ func (u *BackupService) BatchDeleteRecord(ids []uint) error {
 		}
 	}
 	return backupRepo.DeleteRecord(context.Background(), commonRepo.WithByIDs(ids))
+}
+
+func (u *BackupService) ListAppRecords(name, detailName, fileName string) ([]model.BackupRecord, error) {
+	records, err := backupRepo.ListRecord(
+		commonRepo.WithOrderBy("created_at asc"),
+		commonRepo.WithByName(name),
+		commonRepo.WithByType("app"),
+		backupRepo.WithFileNameStartWith(fileName),
+		backupRepo.WithByDetailName(detailName),
+	)
+	if err != nil {
+		return nil, err
+	}
+	return records, err
 }
 
 func (u *BackupService) ListFiles(req dto.OperateByID) []string {

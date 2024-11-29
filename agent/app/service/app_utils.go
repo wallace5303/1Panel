@@ -199,17 +199,18 @@ func createLink(ctx context.Context, installTask *task.Task, app model.App, appI
 				}
 			case constant.AppRedis:
 				if password, ok := params["PANEL_REDIS_ROOT_PASSWORD"]; ok {
-					if password != "" {
-						authParam := dto.RedisAuthParam{
-							RootPassword: password.(string),
-						}
-						authByte, err := json.Marshal(authParam)
-						if err != nil {
-							return err
-						}
-						appInstall.Param = string(authByte)
+					authParam := dto.RedisAuthParam{
+						RootPassword: "",
 					}
-					database.Password = password.(string)
+					if password != "" {
+						authParam.RootPassword = password.(string)
+						database.Password = password.(string)
+					}
+					authByte, err := json.Marshal(authParam)
+					if err != nil {
+						return err
+					}
+					appInstall.Param = string(authByte)
 				}
 			}
 			return databaseRepo.Create(ctx, database)
@@ -558,11 +559,23 @@ func upgradeInstall(req request.AppInstallUpgrade) error {
 	)
 	backUpApp := func(t *task.Task) error {
 		if req.Backup {
-			backupRecord, err := NewIBackupService().AppBackup(dto.CommonBackup{Name: install.App.Key, DetailName: install.Name})
-			if err != nil {
+			backupService := NewIBackupService()
+			fileName := fmt.Sprintf("upgrade_backup_%s_%s.tar.gz", install.Name, time.Now().Format(constant.DateTimeSlimLayout)+common.RandStrAndNum(5))
+			backupRecord, err := backupService.AppBackup(dto.CommonBackup{Name: install.App.Key, DetailName: install.Name, FileName: fileName})
+			if err == nil {
+				backups, _ := backupService.ListAppRecords(install.App.Key, install.Name, "upgrade_backup")
+				if len(backups) > 3 {
+					backupsToDelete := backups[:len(backups)-3]
+					var deleteIDs []uint
+					for _, backup := range backupsToDelete {
+						deleteIDs = append(deleteIDs, backup.ID)
+					}
+					_ = backupService.BatchDeleteRecord(deleteIDs)
+				}
+				backupFile = path.Join(global.CONF.System.Backup, backupRecord.FileDir, backupRecord.FileName)
+			} else {
 				return buserr.WithNameAndErr("ErrAppBackup", install.Name, err)
 			}
-			backupFile = path.Join(global.CONF.System.Backup, backupRecord.FileDir, backupRecord.FileName)
 		}
 		return nil
 	}
@@ -1390,7 +1403,7 @@ func handleInstalled(appInstallList []model.AppInstall, updated bool, sync bool)
 	}
 
 	for _, installed := range appInstallList {
-		if updated && (installed.App.Type == "php" || installed.Status == constant.Installing || (installed.App.Key == constant.AppMysql && installed.Version == "5.6.51")) {
+		if updated && ignoreUpdate(installed) {
 			continue
 		}
 		if sync && !doNotNeedSync(installed) {
@@ -1688,6 +1701,31 @@ func isHostModel(dockerCompose string) bool {
 		if value, ok := serviceValue["network_mode"]; ok && value == "host" {
 			return true
 		}
+	}
+	return false
+}
+
+func getMajorVersion(version string) string {
+	parts := strings.Split(version, ".")
+	if len(parts) >= 2 {
+		return parts[0] + "." + parts[1]
+	}
+	return version
+}
+
+func ignoreUpdate(installed model.AppInstall) bool {
+	if installed.App.Type == "php" || installed.Status == constant.Installing {
+		return true
+	}
+	if installed.App.Key == constant.AppMysql {
+		majorVersion := getMajorVersion(installed.Version)
+		appDetails, _ := appDetailRepo.GetBy(appDetailRepo.WithAppId(installed.App.ID))
+		for _, appDetail := range appDetails {
+			if strings.HasPrefix(appDetail.Version, majorVersion) && common.CompareVersion(appDetail.Version, installed.Version) {
+				return false
+			}
+		}
+		return true
 	}
 	return false
 }
