@@ -4,22 +4,24 @@ import (
 	"fmt"
 
 	"github.com/1Panel-dev/1Panel/core/constant"
+	"github.com/1Panel-dev/1Panel/core/global"
 	"gorm.io/gorm"
 )
 
-type DBOption func(*gorm.DB) *gorm.DB
-
 type ICommonRepo interface {
-	WithByID(id uint) DBOption
-	WithByIDs(ids []uint) DBOption
-	WithByName(name string) DBOption
-	WithLikeName(name string) DBOption
-	WithByType(ty string) DBOption
-	WithByKey(key string) DBOption
-	WithOrderBy(orderStr string) DBOption
-	WithByStatus(status string) DBOption
+	WithByID(id uint) global.DBOption
+	WithByGroupID(id uint) global.DBOption
 
-	WithOrderRuleBy(orderBy, order string) DBOption
+	WithByName(name string) global.DBOption
+	WithByType(ty string) global.DBOption
+	WithByKey(key string) global.DBOption
+	WithOrderBy(orderStr string) global.DBOption
+	WithByStatus(status string) global.DBOption
+	WithByGroupBelong(group string) global.DBOption
+
+	WithByIDs(ids []uint) global.DBOption
+
+	WithOrderRuleBy(orderBy, order string) global.DBOption
 }
 
 type CommonRepo struct{}
@@ -28,57 +30,56 @@ func NewICommonRepo() ICommonRepo {
 	return &CommonRepo{}
 }
 
-func (c *CommonRepo) WithByID(id uint) DBOption {
+func (c *CommonRepo) WithByID(id uint) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
 		return g.Where("id = ?", id)
 	}
 }
-func (c *CommonRepo) WithByIDs(ids []uint) DBOption {
+func (c *CommonRepo) WithByGroupID(id uint) global.DBOption {
+	return func(g *gorm.DB) *gorm.DB {
+		return g.Where("group_id = ?", id)
+	}
+}
+
+func (c *CommonRepo) WithByIDs(ids []uint) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
 		return g.Where("id in (?)", ids)
 	}
 }
-func (c *CommonRepo) WithByName(name string) DBOption {
+func (c *CommonRepo) WithByName(name string) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
-		if len(name) == 0 {
-			return g
-		}
 		return g.Where("`name` = ?", name)
 	}
 }
-func (c *CommonRepo) WithLikeName(name string) DBOption {
+
+func (c *CommonRepo) WithByType(ty string) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
-		if len(name) == 0 {
-			return g
-		}
-		return g.Where("name like ? or command like ?", "%"+name+"%", "%"+name+"%")
-	}
-}
-func (c *CommonRepo) WithByType(ty string) DBOption {
-	return func(g *gorm.DB) *gorm.DB {
-		if len(ty) == 0 {
-			return g
-		}
 		return g.Where("`type` = ?", ty)
 	}
 }
-func (c *CommonRepo) WithByKey(key string) DBOption {
+func (c *CommonRepo) WithByKey(key string) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
 		return g.Where("key = ?", key)
 	}
 }
-func (c *CommonRepo) WithByStatus(status string) DBOption {
+func (c *CommonRepo) WithByStatus(status string) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
 		return g.Where("status = ?", status)
 	}
 }
-func (c *CommonRepo) WithOrderBy(orderStr string) DBOption {
+func (c *CommonRepo) WithByGroupBelong(group string) global.DBOption {
+	return func(g *gorm.DB) *gorm.DB {
+		return g.Where("group_belong = ?", group)
+	}
+}
+
+func (c *CommonRepo) WithOrderBy(orderStr string) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
 		return g.Order(orderStr)
 	}
 }
 
-func (c *CommonRepo) WithOrderRuleBy(orderBy, order string) DBOption {
+func (c *CommonRepo) WithOrderRuleBy(orderBy, order string) global.DBOption {
 	switch order {
 	case constant.OrderDesc:
 		order = "desc"

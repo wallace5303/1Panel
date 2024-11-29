@@ -2,8 +2,8 @@ package service
 
 import (
 	"github.com/1Panel-dev/1Panel/core/app/dto"
-	"github.com/1Panel-dev/1Panel/core/app/repo"
 	"github.com/1Panel-dev/1Panel/core/constant"
+	"github.com/1Panel-dev/1Panel/core/global"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 )
@@ -66,15 +66,15 @@ func (u *CommandService) SearchForTree(req dto.OperateByType) ([]dto.CommandTree
 }
 
 func (u *CommandService) SearchWithPage(req dto.SearchCommandWithPage) (int64, interface{}, error) {
-	options := []repo.DBOption{
+	options := []global.DBOption{
 		commonRepo.WithOrderRuleBy(req.OrderBy, req.Order),
 		commonRepo.WithByType(req.Type),
 	}
 	if len(req.Info) != 0 {
-		options = append(options, commonRepo.WithLikeName(req.Info))
+		options = append(options, commandRepo.WithByInfo(req.Info))
 	}
 	if req.GroupID != 0 {
-		options = append(options, groupRepo.WithByGroupID(req.GroupID))
+		options = append(options, commonRepo.WithByGroupID(req.GroupID))
 	}
 	total, commands, err := commandRepo.Page(req.Page, req.PageSize, options...)
 	if err != nil {

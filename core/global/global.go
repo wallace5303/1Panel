@@ -26,3 +26,5 @@ var (
 
 	BackupAccountTokenEntryID cron.EntryID
 )
+
+type DBOption func(*gorm.DB) *gorm.DB

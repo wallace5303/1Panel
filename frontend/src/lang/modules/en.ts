@@ -985,6 +985,8 @@ const message = {
         fanSpeed: 'Fan Speed',
     },
     terminal: {
+        local: 'Local',
+        localHelper: 'The `local` name is used only for system local identification',
         conn: 'connection',
         connLocalErr: 'Unable to automatically authenticate, please fill in the local server login information!',
         testConn: 'Test connection',

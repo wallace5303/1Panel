@@ -74,12 +74,19 @@ func (u *LogService) ListSystemLogFile() ([]string, error) {
 }
 
 func (u *LogService) PageLoginLog(req dto.SearchLgLogWithPage) (int64, interface{}, error) {
+	options := []global.DBOption{
+		commonRepo.WithOrderBy("created_at desc"),
+	}
+	if len(req.IP) != 0 {
+		options = append(options, logRepo.WithByIP(req.IP))
+	}
+	if len(req.Status) != 0 {
+		options = append(options, commonRepo.WithByStatus(req.Status))
+	}
 	total, ops, err := logRepo.PageLoginLog(
 		req.Page,
 		req.PageSize,
-		logRepo.WithByIP(req.IP),
-		logRepo.WithByStatus(req.Status),
-		commonRepo.WithOrderBy("created_at desc"),
+		options...,
 	)
 	var dtoOps []dto.LoginLog
 	for _, op := range ops {
@@ -97,13 +104,21 @@ func (u *LogService) CreateOperationLog(operation *model.OperationLog) error {
 }
 
 func (u *LogService) PageOperationLog(req dto.SearchOpLogWithPage) (int64, interface{}, error) {
+	options := []global.DBOption{
+		commonRepo.WithOrderBy("created_at desc"),
+		logRepo.WithByLikeOperation(req.Operation),
+	}
+	if len(req.Source) != 0 {
+		options = append(options, logRepo.WithBySource(req.Source))
+	}
+	if len(req.Status) != 0 {
+		options = append(options, commonRepo.WithByStatus(req.Status))
+	}
+
 	total, ops, err := logRepo.PageOperationLog(
 		req.Page,
 		req.PageSize,
-		logRepo.WithByGroup(req.Source),
-		logRepo.WithByLikeOperation(req.Operation),
-		logRepo.WithByStatus(req.Status),
-		commonRepo.WithOrderBy("created_at desc"),
+		options...,
 	)
 	var dtoOps []dto.OperationLog
 	for _, op := range ops {

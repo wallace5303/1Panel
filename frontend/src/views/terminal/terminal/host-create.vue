@@ -10,8 +10,7 @@
                 type="warning"
             />
             <el-form-item :label="$t('terminal.ip')" prop="addr">
-                <el-input @change="isOK = false" v-if="!isLocal" clearable v-model.trim="hostInfo.addr" />
-                <el-tag v-if="isLocal">{{ hostInfo.addr }}</el-tag>
+                <el-input @change="isOK = false" clearable v-model.trim="hostInfo.addr" />
             </el-form-item>
             <el-form-item :label="$t('commons.login.username')" prop="user">
                 <el-input @change="isOK = false" clearable v-model="hostInfo.user" />
@@ -43,8 +42,17 @@
             <el-form-item class="mt-2.5" :label="$t('commons.table.port')" prop="port">
                 <el-input @change="isOK = false" clearable v-model.number="hostInfo.port" />
             </el-form-item>
-            <el-form-item :label="$t('commons.table.title')" prop="name">
-                <el-input clearable v-model="hostInfo.name" />
+            <el-form-item :label="$t('commons.table.group')" prop="groupID">
+                <el-select filterable v-model="hostInfo.groupID" clearable style="width: 100%">
+                    <div v-for="item in groupList" :key="item.id">
+                        <el-option
+                            v-if="item.name === 'default'"
+                            :label="$t('commons.table.default')"
+                            :value="item.id"
+                        />
+                        <el-option v-else :label="item.name" :value="item.id" />
+                    </div>
+                </el-select>
             </el-form-item>
             <el-form-item :label="$t('commons.table.description')" prop="description">
                 <el-input clearable v-model="hostInfo.description" />
@@ -72,11 +80,14 @@ import { addHost, testByInfo } from '@/api/modules/terminal';
 import i18n from '@/lang';
 import { reactive, ref } from 'vue';
 import { MsgError, MsgSuccess } from '@/utils/message';
+import { GetGroupList } from '@/api/modules/group';
 
 const dialogVisible = ref();
 const isOK = ref(false);
 type FormInstance = InstanceType<typeof ElForm>;
 const hostRef = ref<FormInstance>();
+
+const groupList = ref();
 
 let hostInfo = reactive<Host.HostOperate>({
     id: 0,
@@ -122,6 +133,7 @@ const acceptParams = (props: DialogProps) => {
         hostInfo.addr = '127.0.0.1';
         hostInfo.user = 'root';
     }
+    loadGroups();
     dialogVisible.value = true;
 };
 
@@ -161,6 +173,17 @@ const submitAddHost = (formEl: FormInstance | undefined, ops: string) => {
                 break;
         }
     });
+};
+
+const loadGroups = async () => {
+    const res = await GetGroupList('host');
+    groupList.value = res.data;
+    for (const item of groupList.value) {
+        if (item.isDefault) {
+            hostInfo.groupID = item.id;
+            break;
+        }
+    }
 };
 
 defineExpose({

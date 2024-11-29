@@ -941,6 +941,8 @@ const message = {
         fanSpeed: '风扇转速',
     },
     terminal: {
+        local: '本机',
+        localHelper: 'local 名称仅用于系统本机标识',
         conn: '连接',
         connLocalErr: '无法自动认证，请填写本地服务器的登录信息！',
         testConn: '连接测试',
@@ -1499,7 +1501,7 @@ const message = {
         rollbackHelper:
             '即将回滚本次恢复，回滚将替换所有本次恢复的文件，过程中可能需要重启 Docker 以及 1Panel 服务，是否继续？',
 
-        upgradeRecord: '升级记录',
+        upgradeRecord: '更新记录',
         upgrading: '正在升级中，请稍候...',
         upgradeHelper: '升级操作需要重启 1Panel 服务，是否继续？',
         noUpgrade: '当前已经是最新版本',

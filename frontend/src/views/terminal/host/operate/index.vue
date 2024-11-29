@@ -2,10 +2,7 @@
     <DrawerPro v-model="drawerVisible" :header="$t('terminal.host')" :back="handleClose" size="large">
         <el-form ref="hostInfoRef" label-position="top" :model="dialogData.rowData" :rules="rules" v-loading="loading">
             <el-form-item :label="$t('terminal.ip')" prop="addr">
-                <el-tag v-if="dialogData.rowData!.addr === '127.0.0.1' && dialogData.title === 'edit'">
-                    {{ dialogData.rowData!.addr }}
-                </el-tag>
-                <el-input @change="isOK = false" v-else clearable v-model.trim="dialogData.rowData!.addr" />
+                <el-input @change="isOK = false" clearable v-model.trim="dialogData.rowData!.addr" />
             </el-form-item>
             <el-form-item :label="$t('commons.login.username')" prop="user">
                 <el-input @change="isOK = false" clearable v-model="dialogData.rowData!.user" />
@@ -53,11 +50,18 @@
             </el-form-item>
             <el-form-item :label="$t('commons.table.group')" prop="groupID">
                 <el-select filterable v-model="dialogData.rowData!.groupID" clearable style="width: 100%">
-                    <el-option v-for="item in groupList" :key="item.id" :label="item.name" :value="item.id" />
+                    <div v-for="item in groupList" :key="item.id">
+                        <el-option
+                            v-if="item.name === 'default'"
+                            :label="$t('commons.table.default')"
+                            :value="item.id"
+                        />
+                        <el-option v-else :label="item.name" :value="item.id" />
+                    </div>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$t('commons.table.title')" prop="name">
-                <el-input clearable v-model="dialogData.rowData!.name" />
+            <el-form-item :label="$t('commons.table.name')" prop="name">
+                <el-input :disabled="itemName === 'local'" clearable v-model="dialogData.rowData!.name" />
             </el-form-item>
             <el-form-item :label="$t('commons.table.description')" prop="description">
                 <el-input clearable type="textarea" v-model="dialogData.rowData!.description" />
@@ -98,6 +102,7 @@ const drawerVisible = ref(false);
 const dialogData = ref<DialogProps>({
     title: '',
 });
+const itemName = ref();
 
 const groupList = ref();
 const acceptParams = (params: DialogProps): void => {
@@ -119,7 +124,14 @@ const rules = reactive({
     port: [Rules.requiredInput, Rules.port],
     user: [Rules.requiredInput],
     authMode: [Rules.requiredSelect],
+    name: [{ validator: checkName, trigger: 'blur' }],
 });
+function checkName(rule: any, value: any, callback: any) {
+    if (value === 'local') {
+        return callback(new Error(i18n.global.t('terminal.localHelper')));
+    }
+    callback();
+}
 
 const loadGroups = async () => {
     const res = await GetGroupList('host');

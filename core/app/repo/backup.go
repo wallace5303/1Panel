@@ -8,19 +8,19 @@ import (
 type BackupRepo struct{}
 
 type IBackupRepo interface {
-	Get(opts ...DBOption) (model.BackupAccount, error)
-	List(opts ...DBOption) ([]model.BackupAccount, error)
-	Page(limit, offset int, opts ...DBOption) (int64, []model.BackupAccount, error)
+	Get(opts ...global.DBOption) (model.BackupAccount, error)
+	List(opts ...global.DBOption) ([]model.BackupAccount, error)
+	Page(limit, offset int, opts ...global.DBOption) (int64, []model.BackupAccount, error)
 	Create(backup *model.BackupAccount) error
 	Save(backup *model.BackupAccount) error
-	Delete(opts ...DBOption) error
+	Delete(opts ...global.DBOption) error
 }
 
 func NewIBackupRepo() IBackupRepo {
 	return &BackupRepo{}
 }
 
-func (u *BackupRepo) Get(opts ...DBOption) (model.BackupAccount, error) {
+func (u *BackupRepo) Get(opts ...global.DBOption) (model.BackupAccount, error) {
 	var backup model.BackupAccount
 	db := global.DB
 	for _, opt := range opts {
@@ -30,7 +30,7 @@ func (u *BackupRepo) Get(opts ...DBOption) (model.BackupAccount, error) {
 	return backup, err
 }
 
-func (u *BackupRepo) Page(page, size int, opts ...DBOption) (int64, []model.BackupAccount, error) {
+func (u *BackupRepo) Page(page, size int, opts ...global.DBOption) (int64, []model.BackupAccount, error) {
 	var ops []model.BackupAccount
 	db := global.DB.Model(&model.BackupAccount{})
 	for _, opt := range opts {
@@ -42,7 +42,7 @@ func (u *BackupRepo) Page(page, size int, opts ...DBOption) (int64, []model.Back
 	return count, ops, err
 }
 
-func (u *BackupRepo) List(opts ...DBOption) ([]model.BackupAccount, error) {
+func (u *BackupRepo) List(opts ...global.DBOption) ([]model.BackupAccount, error) {
 	var ops []model.BackupAccount
 	db := global.DB.Model(&model.BackupAccount{})
 	for _, opt := range opts {
@@ -60,7 +60,7 @@ func (u *BackupRepo) Save(backup *model.BackupAccount) error {
 	return global.DB.Save(backup).Error
 }
 
-func (u *BackupRepo) Delete(opts ...DBOption) error {
+func (u *BackupRepo) Delete(opts ...global.DBOption) error {
 	db := global.DB
 	for _, opt := range opts {
 		db = opt(db)

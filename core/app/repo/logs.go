@@ -11,16 +11,15 @@ type LogRepo struct{}
 type ILogRepo interface {
 	CleanLogin() error
 	CreateLoginLog(user *model.LoginLog) error
-	PageLoginLog(limit, offset int, opts ...DBOption) (int64, []model.LoginLog, error)
+	PageLoginLog(limit, offset int, opts ...global.DBOption) (int64, []model.LoginLog, error)
 
 	CleanOperation() error
 	CreateOperationLog(user *model.OperationLog) error
-	PageOperationLog(limit, offset int, opts ...DBOption) (int64, []model.OperationLog, error)
+	PageOperationLog(limit, offset int, opts ...global.DBOption) (int64, []model.OperationLog, error)
 
-	WithByIP(ip string) DBOption
-	WithByStatus(status string) DBOption
-	WithByGroup(group string) DBOption
-	WithByLikeOperation(operation string) DBOption
+	WithByIP(ip string) global.DBOption
+	WithBySource(source string) global.DBOption
+	WithByLikeOperation(operation string) global.DBOption
 }
 
 func NewILogRepo() ILogRepo {
@@ -35,7 +34,7 @@ func (u *LogRepo) CreateLoginLog(log *model.LoginLog) error {
 	return global.DB.Create(log).Error
 }
 
-func (u *LogRepo) PageLoginLog(page, size int, opts ...DBOption) (int64, []model.LoginLog, error) {
+func (u *LogRepo) PageLoginLog(page, size int, opts ...global.DBOption) (int64, []model.LoginLog, error) {
 	var ops []model.LoginLog
 	db := global.DB.Model(&model.LoginLog{})
 	for _, opt := range opts {
@@ -55,7 +54,7 @@ func (u *LogRepo) CreateOperationLog(log *model.OperationLog) error {
 	return global.DB.Create(log).Error
 }
 
-func (u *LogRepo) PageOperationLog(page, size int, opts ...DBOption) (int64, []model.OperationLog, error) {
+func (u *LogRepo) PageOperationLog(page, size int, opts ...global.DBOption) (int64, []model.OperationLog, error) {
 	var ops []model.OperationLog
 	db := global.DB.Model(&model.OperationLog{})
 	for _, opt := range opts {
@@ -67,7 +66,7 @@ func (u *LogRepo) PageOperationLog(page, size int, opts ...DBOption) (int64, []m
 	return count, ops, err
 }
 
-func (c *LogRepo) WithByStatus(status string) DBOption {
+func (c *LogRepo) WithByStatus(status string) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
 		if len(status) == 0 {
 			return g
@@ -75,23 +74,21 @@ func (c *LogRepo) WithByStatus(status string) DBOption {
 		return g.Where("status = ?", status)
 	}
 }
-func (c *LogRepo) WithByGroup(group string) DBOption {
+func (c *LogRepo) WithBySource(source string) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
-		if len(group) == 0 {
+		if len(source) == 0 {
 			return g
 		}
-		return g.Where("source = ?", group)
+		return g.Where("source = ?", source)
 	}
 }
-func (c *LogRepo) WithByIP(ip string) DBOption {
+func (c *LogRepo) WithByIP(ip string) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
-		if len(ip) == 0 {
-			return g
-		}
 		return g.Where("ip LIKE ?", "%"+ip+"%")
 	}
 }
-func (c *LogRepo) WithByLikeOperation(operation string) DBOption {
+
+func (c *LogRepo) WithByLikeOperation(operation string) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
 		if len(operation) == 0 {
 			return g

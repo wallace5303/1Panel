@@ -1,0 +1,127 @@
+<template>
+    <el-drawer
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+        :key="refresh"
+        v-model="drawerVisible"
+        size="50%"
+        append-to-body
+    >
+        <template #header>
+            <DrawerHeader :header="$t('commons.button.upgrade')" :back="handleClose" />
+        </template>
+        <div class="panel-MdEditor">
+            <el-alert :closable="false">
+                <span class="line-height">{{ $t('setting.versionHelper') }}</span>
+                <li class="line-height">{{ $t('setting.versionHelper1') }}</li>
+                <li class="line-height">{{ $t('setting.versionHelper2') }}</li>
+            </el-alert>
+            <div class="default-theme" style="margin-left: 20px">
+                <h2 class="inline-block">{{ $t('app.version') }}</h2>
+            </div>
+            <el-radio-group class="inline-block tag" v-model="upgradeVersion" @change="changeOption">
+                <el-radio v-if="upgradeInfo.newVersion" :value="upgradeInfo.newVersion">
+                    {{ upgradeInfo.newVersion }}
+                </el-radio>
+                <el-radio v-if="upgradeInfo.latestVersion" :value="upgradeInfo.latestVersion">
+                    {{ upgradeInfo.latestVersion }}
+                </el-radio>
+                <el-radio v-if="upgradeInfo.testVersion" :value="upgradeInfo.testVersion">
+                    {{ upgradeInfo.testVersion }}
+                </el-radio>
+            </el-radio-group>
+            <MdEditor v-model="upgradeInfo.releaseNote" previewOnly :theme="isDarkTheme ? 'dark' : 'light'" />
+        </div>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="drawerVisible = false">{{ $t('commons.button.cancel') }}</el-button>
+                <el-button type="primary" @click="onUpgrade">{{ $t('setting.upgradeNow') }}</el-button>
+            </span>
+        </template>
+    </el-drawer>
+</template>
+
+<script setup lang="ts">
+import DrawerHeader from '@/components/drawer-header/index.vue';
+import { loadReleaseNotes, upgrade } from '@/api/modules/setting';
+import MdEditor from 'md-editor-v3';
+import i18n from '@/lang';
+import 'md-editor-v3/lib/style.css';
+import { MsgSuccess } from '@/utils/message';
+import { ref } from 'vue';
+import { GlobalStore } from '@/store';
+import { ElMessageBox } from 'element-plus';
+import { storeToRefs } from 'pinia';
+
+const globalStore = GlobalStore();
+const { isDarkTheme } = storeToRefs(globalStore);
+
+const drawerVisible = ref(false);
+const upgradeInfo = ref();
+const refresh = ref();
+const upgradeVersion = ref();
+
+interface DialogProps {
+    upgradeInfo: number;
+    upgradeVersion: string;
+}
+const acceptParams = (params: DialogProps): void => {
+    console.log(params);
+    upgradeInfo.value = params.upgradeInfo;
+    upgradeVersion.value = params.upgradeVersion;
+    drawerVisible.value = true;
+};
+
+const emit = defineEmits(['search']);
+
+const handleClose = () => {
+    drawerVisible.value = false;
+};
+
+const changeOption = async () => {
+    const res = await loadReleaseNotes(upgradeVersion.value);
+    upgradeInfo.value.releaseNote = res.data;
+};
+
+const onUpgrade = async () => {
+    ElMessageBox.confirm(i18n.global.t('setting.upgradeHelper', i18n.global.t('commons.button.upgrade')), {
+        confirmButtonText: i18n.global.t('commons.button.confirm'),
+        cancelButtonText: i18n.global.t('commons.button.cancel'),
+        type: 'info',
+    }).then(async () => {
+        globalStore.isLoading = true;
+        await upgrade(upgradeVersion.value);
+        globalStore.isOnRestart = true;
+        drawerVisible.value = false;
+        MsgSuccess(i18n.global.t('commons.msg.operationSuccess'));
+        emit('search');
+    });
+};
+
+defineExpose({
+    acceptParams,
+});
+</script>
+
+<style lang="scss" scoped>
+.line-height {
+    line-height: 25px;
+}
+.panel-MdEditor {
+    height: calc(100vh - 330px);
+    .tag {
+        margin-top: -6px;
+        margin-left: 20px;
+        vertical-align: middle;
+    }
+    :deep(.md-editor-preview) {
+        font-size: 14px;
+    }
+    :deep(.default-theme h2) {
+        color: var(--dark-gold-base-color);
+        margin: 13px, 0;
+        padding: 0;
+        font-size: 16px;
+    }
+}
+</style>

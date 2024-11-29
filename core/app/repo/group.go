@@ -9,16 +9,13 @@ import (
 type GroupRepo struct{}
 
 type IGroupRepo interface {
-	Get(opts ...DBOption) (model.Group, error)
-	GetList(opts ...DBOption) ([]model.Group, error)
+	Get(opts ...global.DBOption) (model.Group, error)
+	GetList(opts ...global.DBOption) ([]model.Group, error)
 	Create(group *model.Group) error
 	Update(id uint, vars map[string]interface{}) error
-	Delete(opts ...DBOption) error
+	Delete(opts ...global.DBOption) error
 
-	WithByID(id uint) DBOption
-	WithByGroupID(id uint) DBOption
-	WithByGroupType(ty string) DBOption
-	WithByDefault(isDefalut bool) DBOption
+	WithByDefault(isDefalut bool) global.DBOption
 	CancelDefault(groupType string) error
 }
 
@@ -26,31 +23,13 @@ func NewIGroupRepo() IGroupRepo {
 	return &GroupRepo{}
 }
 
-func (c *GroupRepo) WithByID(id uint) DBOption {
-	return func(g *gorm.DB) *gorm.DB {
-		return g.Where("id = ?", id)
-	}
-}
-
-func (c *GroupRepo) WithByGroupID(id uint) DBOption {
-	return func(g *gorm.DB) *gorm.DB {
-		return g.Where("group_id = ?", id)
-	}
-}
-
-func (c *GroupRepo) WithByGroupType(ty string) DBOption {
-	return func(g *gorm.DB) *gorm.DB {
-		return g.Where("`type` = ?", ty)
-	}
-}
-
-func (c *GroupRepo) WithByDefault(isDefalut bool) DBOption {
+func (c *GroupRepo) WithByDefault(isDefalut bool) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
 		return g.Where("is_default = ?", isDefalut)
 	}
 }
 
-func (u *GroupRepo) Get(opts ...DBOption) (model.Group, error) {
+func (u *GroupRepo) Get(opts ...global.DBOption) (model.Group, error) {
 	var group model.Group
 	db := global.DB
 	for _, opt := range opts {
@@ -60,7 +39,7 @@ func (u *GroupRepo) Get(opts ...DBOption) (model.Group, error) {
 	return group, err
 }
 
-func (u *GroupRepo) GetList(opts ...DBOption) ([]model.Group, error) {
+func (u *GroupRepo) GetList(opts ...global.DBOption) ([]model.Group, error) {
 	var groups []model.Group
 	db := global.DB.Model(&model.Group{})
 	for _, opt := range opts {
@@ -78,7 +57,7 @@ func (u *GroupRepo) Update(id uint, vars map[string]interface{}) error {
 	return global.DB.Model(&model.Group{}).Where("id = ?", id).Updates(vars).Error
 }
 
-func (u *GroupRepo) Delete(opts ...DBOption) error {
+func (u *GroupRepo) Delete(opts ...global.DBOption) error {
 	db := global.DB
 	for _, opt := range opts {
 		db = opt(db)

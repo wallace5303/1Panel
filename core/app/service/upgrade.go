@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/1Panel-dev/1Panel/core/app/dto"
+	"github.com/1Panel-dev/1Panel/core/app/model"
 	"github.com/1Panel-dev/1Panel/core/constant"
 	"github.com/1Panel-dev/1Panel/core/global"
 	"github.com/1Panel-dev/1Panel/core/utils/cmd"
@@ -23,6 +24,7 @@ type UpgradeService struct{}
 
 type IUpgradeService interface {
 	Upgrade(req dto.Upgrade) error
+	Rollback(req dto.OperateByID) error
 	LoadNotes(req dto.Upgrade) (string, error)
 	SearchUpgrade() (*dto.UpgradeInfo, error)
 }
@@ -127,6 +129,9 @@ func (u *UpgradeService) Upgrade(req dto.Upgrade) error {
 			_ = settingRepo.Update("SystemStatus", "Free")
 			return
 		}
+		itemLog := model.UpgradeLog{NodeID: 0, OldVersion: global.CONF.System.Version, NewVersion: req.Version, BackupFile: originalDir}
+		_ = upgradeLogRepo.Create(&itemLog)
+
 		global.LOG.Info("backup original data successful, now start to upgrade!")
 
 		if err := files.CopyItem(false, true, path.Join(tmpDir, "1panel*"), "/usr/local/bin"); err != nil {
@@ -158,6 +163,15 @@ func (u *UpgradeService) Upgrade(req dto.Upgrade) error {
 		_ = settingRepo.Update("SystemStatus", "Free")
 		_, _ = cmd.ExecWithTimeOut("systemctl daemon-reload && systemctl restart 1panel.service", 1*time.Minute)
 	}()
+	return nil
+}
+
+func (u *UpgradeService) Rollback(req dto.OperateByID) error {
+	log, _ := upgradeLogRepo.Get(commonRepo.WithByID(req.ID))
+	if log.ID == 0 {
+		return constant.ErrRecordNotFound
+	}
+	u.handleRollback(log.BackupFile, 3)
 	return nil
 }
 

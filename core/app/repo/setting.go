@@ -8,8 +8,8 @@ import (
 type SettingRepo struct{}
 
 type ISettingRepo interface {
-	List(opts ...DBOption) ([]model.Setting, error)
-	Get(opts ...DBOption) (model.Setting, error)
+	List(opts ...global.DBOption) ([]model.Setting, error)
+	Get(opts ...global.DBOption) (model.Setting, error)
 	Create(key, value string) error
 	Update(key, value string) error
 }
@@ -18,7 +18,7 @@ func NewISettingRepo() ISettingRepo {
 	return &SettingRepo{}
 }
 
-func (u *SettingRepo) List(opts ...DBOption) ([]model.Setting, error) {
+func (u *SettingRepo) List(opts ...global.DBOption) ([]model.Setting, error) {
 	var settings []model.Setting
 	db := global.DB.Model(&model.Setting{})
 	for _, opt := range opts {
@@ -36,7 +36,7 @@ func (u *SettingRepo) Create(key, value string) error {
 	return global.DB.Create(setting).Error
 }
 
-func (u *SettingRepo) Get(opts ...DBOption) (model.Setting, error) {
+func (u *SettingRepo) Get(opts ...global.DBOption) (model.Setting, error) {
 	var settings model.Setting
 	db := global.DB.Model(&model.Setting{})
 	for _, opt := range opts {

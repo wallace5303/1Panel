@@ -9,25 +9,25 @@ import (
 type HostRepo struct{}
 
 type IHostRepo interface {
-	Get(opts ...DBOption) (model.Host, error)
-	GetList(opts ...DBOption) ([]model.Host, error)
-	Page(limit, offset int, opts ...DBOption) (int64, []model.Host, error)
+	Get(opts ...global.DBOption) (model.Host, error)
+	GetList(opts ...global.DBOption) ([]model.Host, error)
+	Page(limit, offset int, opts ...global.DBOption) (int64, []model.Host, error)
 	Create(host *model.Host) error
 	Update(id uint, vars map[string]interface{}) error
 	UpdateGroup(group, newGroup uint) error
-	Delete(opts ...DBOption) error
+	Delete(opts ...global.DBOption) error
 
-	WithByInfo(info string) DBOption
-	WithByPort(port uint) DBOption
-	WithByUser(user string) DBOption
-	WithByAddr(addr string) DBOption
+	WithByInfo(info string) global.DBOption
+	WithByPort(port uint) global.DBOption
+	WithByUser(user string) global.DBOption
+	WithByAddr(addr string) global.DBOption
 }
 
 func NewIHostRepo() IHostRepo {
 	return &HostRepo{}
 }
 
-func (h *HostRepo) Get(opts ...DBOption) (model.Host, error) {
+func (h *HostRepo) Get(opts ...global.DBOption) (model.Host, error) {
 	var host model.Host
 	db := global.DB
 	for _, opt := range opts {
@@ -37,7 +37,7 @@ func (h *HostRepo) Get(opts ...DBOption) (model.Host, error) {
 	return host, err
 }
 
-func (h *HostRepo) GetList(opts ...DBOption) ([]model.Host, error) {
+func (h *HostRepo) GetList(opts ...global.DBOption) ([]model.Host, error) {
 	var hosts []model.Host
 	db := global.DB.Model(&model.Host{})
 	for _, opt := range opts {
@@ -47,7 +47,7 @@ func (h *HostRepo) GetList(opts ...DBOption) ([]model.Host, error) {
 	return hosts, err
 }
 
-func (h *HostRepo) Page(page, size int, opts ...DBOption) (int64, []model.Host, error) {
+func (h *HostRepo) Page(page, size int, opts ...global.DBOption) (int64, []model.Host, error) {
 	var users []model.Host
 	db := global.DB.Model(&model.Host{})
 	for _, opt := range opts {
@@ -59,7 +59,7 @@ func (h *HostRepo) Page(page, size int, opts ...DBOption) (int64, []model.Host, 
 	return count, users, err
 }
 
-func (h *HostRepo) WithByInfo(info string) DBOption {
+func (h *HostRepo) WithByInfo(info string) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
 		if len(info) == 0 {
 			return g
@@ -69,27 +69,19 @@ func (h *HostRepo) WithByInfo(info string) DBOption {
 	}
 }
 
-func (h *HostRepo) WithByPort(port uint) DBOption {
+func (h *HostRepo) WithByPort(port uint) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
 		return g.Where("port = ?", port)
 	}
 }
-func (h *HostRepo) WithByUser(user string) DBOption {
+func (h *HostRepo) WithByUser(user string) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
 		return g.Where("user = ?", user)
 	}
 }
-func (h *HostRepo) WithByAddr(addr string) DBOption {
+func (h *HostRepo) WithByAddr(addr string) global.DBOption {
 	return func(g *gorm.DB) *gorm.DB {
 		return g.Where("addr = ?", addr)
-	}
-}
-func (h *HostRepo) WithByGroup(group string) DBOption {
-	return func(g *gorm.DB) *gorm.DB {
-		if len(group) == 0 {
-			return g
-		}
-		return g.Where("group_belong = ?", group)
 	}
 }
 
@@ -105,7 +97,7 @@ func (h *HostRepo) UpdateGroup(group, newGroup uint) error {
 	return global.DB.Model(&model.Host{}).Where("group_id = ?", group).Updates(map[string]interface{}{"group_id": newGroup}).Error
 }
 
-func (h *HostRepo) Delete(opts ...DBOption) error {
+func (h *HostRepo) Delete(opts ...global.DBOption) error {
 	db := global.DB
 	for _, opt := range opts {
 		db = opt(db)

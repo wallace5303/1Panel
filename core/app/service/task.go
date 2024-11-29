@@ -2,7 +2,7 @@ package service
 
 import (
 	"github.com/1Panel-dev/1Panel/core/app/dto"
-	"github.com/1Panel-dev/1Panel/core/app/repo"
+	"github.com/1Panel-dev/1Panel/core/global"
 )
 
 type TaskLogService struct{}
@@ -16,7 +16,7 @@ func NewITaskService() ITaskLogService {
 }
 
 func (u *TaskLogService) Page(req dto.SearchTaskLogReq) (int64, []dto.TaskDTO, error) {
-	opts := []repo.DBOption{
+	opts := []global.DBOption{
 		commonRepo.WithOrderBy("created_at desc"),
 	}
 	if req.Status != "" {

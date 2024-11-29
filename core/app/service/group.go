@@ -7,9 +7,9 @@ import (
 
 	"github.com/1Panel-dev/1Panel/core/app/dto"
 	"github.com/1Panel-dev/1Panel/core/app/model"
-	"github.com/1Panel-dev/1Panel/core/app/repo"
 	"github.com/1Panel-dev/1Panel/core/buserr"
 	"github.com/1Panel-dev/1Panel/core/constant"
+	"github.com/1Panel-dev/1Panel/core/global"
 	httpUtils "github.com/1Panel-dev/1Panel/core/utils/http"
 	"github.com/1Panel-dev/1Panel/core/utils/xpack"
 	"github.com/jinzhu/copier"
@@ -30,10 +30,12 @@ func NewIGroupService() IGroupService {
 }
 
 func (u *GroupService) List(req dto.OperateByType) ([]dto.GroupInfo, error) {
-	options := []repo.DBOption{
-		commonRepo.WithByType(req.Type),
+	options := []global.DBOption{
 		commonRepo.WithOrderBy("is_default desc"),
 		commonRepo.WithOrderBy("created_at desc"),
+	}
+	if len(req.Type) != 0 {
+		options = append(options, commonRepo.WithByType(req.Type))
 	}
 	var (
 		groups []model.Group

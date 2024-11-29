@@ -6,8 +6,8 @@ import (
 
 	"github.com/1Panel-dev/1Panel/core/app/dto"
 	"github.com/1Panel-dev/1Panel/core/app/model"
-	"github.com/1Panel-dev/1Panel/core/app/repo"
 	"github.com/1Panel-dev/1Panel/core/constant"
+	"github.com/1Panel-dev/1Panel/core/global"
 	"github.com/1Panel-dev/1Panel/core/utils/encrypt"
 	"github.com/1Panel-dev/1Panel/core/utils/ssh"
 	"github.com/jinzhu/copier"
@@ -151,12 +151,12 @@ func (u *HostService) GetHostInfo(id uint) (*model.Host, error) {
 }
 
 func (u *HostService) SearchWithPage(req dto.SearchHostWithPage) (int64, interface{}, error) {
-	var options []repo.DBOption
+	var options []global.DBOption
 	if len(req.Info) != 0 {
-		options = append(options, commonRepo.WithLikeName(req.Info))
+		options = append(options, hostRepo.WithByInfo(req.Info))
 	}
 	if req.GroupID != 0 {
-		options = append(options, groupRepo.WithByGroupID(req.GroupID))
+		options = append(options, commonRepo.WithByGroupID(req.GroupID))
 	}
 	total, hosts, err := hostRepo.Page(req.Page, req.PageSize, options...)
 	if err != nil {

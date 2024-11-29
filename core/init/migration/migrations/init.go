@@ -168,7 +168,7 @@ var InitHost = &gormigrate.Migration{
 			return err
 		}
 		host := model.Host{
-			Name: "localhost", Addr: "127.0.0.1", User: "root", Port: 22, AuthMode: "password", GroupID: hostGroup.ID,
+			Name: "local", Addr: "127.0.0.1", User: "root", Port: 22, AuthMode: "password", GroupID: hostGroup.ID,
 		}
 		if err := tx.Create(&host).Error; err != nil {
 			return err
