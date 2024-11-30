@@ -33,9 +33,9 @@ func Init() {
 	if config.System.Mode != "" {
 		mode = config.System.Mode
 	}
-	if mode == "dev" && fileOp.Stat("/opt/1panel/conf/app.yaml") {
+	if mode == "dev" && fileOp.Stat("/Users/gsx/www/tmp/1panel/conf/app.yaml") {
 		v.SetConfigName("app")
-		v.AddConfigPath(path.Join("/opt/1panel/conf"))
+		v.AddConfigPath(path.Join("/Users/gsx/www/tmp/1panel/conf"))
 		if err := v.ReadInConfig(); err != nil {
 			panic(fmt.Errorf("Fatal error config file: %s \n", err))
 		}
@@ -61,7 +61,7 @@ func Init() {
 	if err := v.Unmarshal(&serverConfig); err != nil {
 		panic(err)
 	}
-	if mode == "dev" && fileOp.Stat("/opt/1panel/conf/app.yaml") {
+	if mode == "dev" && fileOp.Stat("/Users/gsx/www/tmp/1panel/conf/app.yaml") {
 		if serverConfig.System.BaseDir != "" {
 			baseDir = serverConfig.System.BaseDir
 		}
