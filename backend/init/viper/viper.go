@@ -61,7 +61,7 @@ func Init() {
 	if err := v.Unmarshal(&serverConfig); err != nil {
 		panic(err)
 	}
-	if mode == "dev" && fileOp.Stat("/opt/1panel/conf/app.yaml") {
+	if mode == "dev" && fileOp.Stat("/Users/gsx/www/tmp/1panel/conf/app.yaml") {
 		if serverConfig.System.BaseDir != "" {
 			baseDir = serverConfig.System.BaseDir
 		}
