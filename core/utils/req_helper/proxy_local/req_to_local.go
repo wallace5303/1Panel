@@ -5,20 +5,23 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"net"
 	"net/http"
 	"net/url"
 	"os"
+	"path"
 	"strings"
 
+	"github.com/gin-gonic/gin"
+
 	"github.com/1Panel-dev/1Panel/core/app/dto"
+	"github.com/1Panel-dev/1Panel/core/global"
 	"github.com/1Panel-dev/1Panel/core/i18n"
 )
 
 func NewLocalClient(reqUrl, reqMethod string, body io.Reader, ctx *gin.Context) (interface{}, error) {
-	sockPath := "/etc/1panel/agent.sock"
+	sockPath := path.Join(global.CONF.Base.InstallDir, "1panel/agent.sock")
 	if _, err := os.Stat(sockPath); err != nil {
 		return nil, fmt.Errorf("no such agent.sock find in localhost, err: %v", err)
 	}

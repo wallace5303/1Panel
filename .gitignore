@@ -63,3 +63,5 @@ cmd/server/fileList.txt
 
 core/.golangci.yml
 agent/.golangci.yml
+data/1panel/log
+data/1panel/db

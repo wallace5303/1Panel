@@ -1,9 +1,11 @@
 package hook
 
 import (
-	"github.com/1Panel-dev/1Panel/agent/utils/alert_push"
 	"os"
+	"path"
 	"strings"
+
+	"github.com/1Panel-dev/1Panel/agent/utils/alert_push"
 
 	"github.com/1Panel-dev/1Panel/agent/app/dto"
 	"github.com/1Panel-dev/1Panel/agent/app/model"
@@ -121,6 +123,10 @@ func initDockerConf() {
 		return
 	}
 	dockerPath := stdout
+
+	// [gsx]
+	userHomeDir, _ := os.UserHomeDir()
+	constant.DaemonJsonPath = path.Join(userHomeDir, ".docker/daemon.json")
 	if strings.Contains(dockerPath, "snap") {
 		constant.DaemonJsonPath = "/var/snap/docker/current/config/daemon.json"
 	}

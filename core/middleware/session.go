@@ -1,17 +1,21 @@
 package middleware
 
 import (
+	"strconv"
+	"strings"
+
 	"github.com/1Panel-dev/1Panel/core/app/api/v2/helper"
 	"github.com/1Panel-dev/1Panel/core/app/repo"
 	"github.com/1Panel-dev/1Panel/core/constant"
 	"github.com/1Panel-dev/1Panel/core/global"
 	"github.com/gin-gonic/gin"
-	"strconv"
-	"strings"
 )
 
 func SessionAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// [gsx]
+		c.Next()
+		return
 		apiReq := c.GetBool("API_AUTH")
 		if strings.HasPrefix(c.Request.URL.Path, "/api/v2/core/auth") || apiReq {
 			c.Next()

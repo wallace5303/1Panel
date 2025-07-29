@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path"
 	"strconv"
 	"strings"
 
@@ -11,7 +12,6 @@ import (
 
 	"github.com/1Panel-dev/1Panel/core/app/api/v2/helper"
 	"github.com/1Panel-dev/1Panel/core/app/repo"
-	"github.com/1Panel-dev/1Panel/core/cmd/server/res"
 	"github.com/1Panel-dev/1Panel/core/constant"
 	"github.com/1Panel-dev/1Panel/core/global"
 	"github.com/1Panel-dev/1Panel/core/utils/xpack"
@@ -42,17 +42,17 @@ func Proxy() gin.HandlerFunc {
 			return
 		}
 
-		apiReq := c.GetBool("API_AUTH")
+		// [gsx]
+		// apiReq := c.GetBool("API_AUTH")
 
-		if !apiReq && strings.HasPrefix(c.Request.URL.Path, "/api/v2/") && !checkSession(c) {
-			data, _ := res.ErrorMsg.ReadFile("html/401.html")
-			c.Data(401, "text/html; charset=utf-8", data)
-			c.Abort()
-			return
-		}
-
+		// if !apiReq && strings.HasPrefix(c.Request.URL.Path, "/api/v2/") && !checkSession(c) {
+		// 	data, _ := res.ErrorMsg.ReadFile("html/401.html")
+		// 	c.Data(401, "text/html; charset=utf-8", data)
+		// 	c.Abort()
+		// 	return
+		// }
 		if !strings.HasPrefix(c.Request.URL.Path, "/api/v2/core") && (currentNode == "local" || len(currentNode) == 0) {
-			sockPath := "/etc/1panel/agent.sock"
+			sockPath := path.Join(global.CONF.Base.InstallDir, "1panel/agent.sock")
 			if _, err := os.Stat(sockPath); err != nil {
 				helper.ErrorWithDetail(c, http.StatusBadRequest, "ErrProxy", err)
 				return

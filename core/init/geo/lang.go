@@ -18,6 +18,7 @@ func Init() {
 
 func initLang() {
 	geoPath := path.Join(global.CONF.Base.InstallDir, "1panel/geo/GeoIP.mmdb")
+	// [todo] [gsx]
 	isLangExist := fileUtils.Stat("/usr/local/bin/lang/zh.sh")
 	isGeoExist := fileUtils.Stat(geoPath)
 	if isLangExist && isGeoExist {
