@@ -25,6 +25,7 @@ func Init() {
 	v := viper.NewWithOptions()
 	v.SetConfigType("yaml")
 
+	// [gsx]
 	coreDir, _ := os.Getwd()
 	baseDir = path.Join(coreDir, "../data")
 	appYamlPath := path.Join(baseDir, "./1panel/conf/app.yaml")

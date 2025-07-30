@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"path"
 
 	"github.com/1Panel-dev/1Panel/agent/app/repo"
 	"github.com/1Panel-dev/1Panel/agent/constant"
@@ -50,10 +51,12 @@ func Start() {
 		Handler: rootRouter,
 	}
 
+	agentSock := path.Join(global.CONF.Base.InstallDir, "1panel/agent.sock")
+	panelDir := path.Join(global.CONF.Base.InstallDir, "1panel")
 	if global.IsMaster {
-		_ = os.Remove("/etc/1panel/agent.sock")
-		_ = os.Mkdir("/etc/1panel", constant.DirPerm)
-		listener, err := net.Listen("unix", "/etc/1panel/agent.sock")
+		_ = os.Remove(agentSock)
+		_ = os.Mkdir(panelDir, constant.DirPerm)
+		listener, err := net.Listen("unix", agentSock)
 		if err != nil {
 			panic(err)
 		}

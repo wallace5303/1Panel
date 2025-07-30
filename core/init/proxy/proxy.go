@@ -5,11 +5,14 @@ import (
 	"net"
 	"net/http"
 	"net/http/httputil"
+	"path"
 	"time"
+
+	"github.com/1Panel-dev/1Panel/core/global"
 )
 
 var (
-	sockPath = "/etc/1panel/agent.sock"
+	sockPath = path.Join(global.CONF.Base.InstallDir, "1panel/agent.sock")
 
 	LocalAgentProxy *httputil.ReverseProxy
 )

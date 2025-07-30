@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path"
 	"strconv"
 	"strings"
 
@@ -52,7 +53,7 @@ func Proxy() gin.HandlerFunc {
 		}
 
 		if !strings.HasPrefix(c.Request.URL.Path, "/api/v2/core") && (currentNode == "local" || len(currentNode) == 0) {
-			sockPath := "/etc/1panel/agent.sock"
+			sockPath := path.Join(global.CONF.Base.InstallDir, "1panel/agent.sock")
 			if _, err := os.Stat(sockPath); err != nil {
 				helper.ErrorWithDetail(c, http.StatusBadRequest, "ErrProxy", err)
 				return

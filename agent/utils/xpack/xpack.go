@@ -4,17 +4,16 @@ package xpack
 
 import (
 	"crypto/tls"
-	"fmt"
 	"net"
 	"net/http"
-	"strings"
+	"os"
+	"path"
 	"time"
 
 	"github.com/1Panel-dev/1Panel/agent/app/dto"
 	"github.com/1Panel-dev/1Panel/agent/app/model"
 	"github.com/1Panel-dev/1Panel/agent/buserr"
 	"github.com/1Panel-dev/1Panel/agent/global"
-	"github.com/1Panel-dev/1Panel/agent/utils/cmd"
 )
 
 func RemoveTamper(website string) {}
@@ -33,15 +32,29 @@ func LoadNodeInfo(isBase bool) (model.NodeInfo, error) {
 }
 
 func loadParams(param string) string {
-	stdout, err := cmd.RunDefaultWithStdoutBashCf("grep '^%s=' /usr/local/bin/1pctl | cut -d'=' -f2", param)
-	if err != nil {
-		panic(err)
+	// [gsx]
+	goDir, _ := os.Getwd()
+	baseDir := path.Join(goDir, "../data")
+	params := map[string]string{
+		"BASE_DIR":          baseDir,
+		"ORIGINAL_VERSION":  "2.0.0",
+		"ORIGINAL_ENTRANCE": "gsx",
+		"ORIGINAL_USERNAME": "admin",
+		"ORIGINAL_PASSWORD": "admin",
+		"ORIGINAL_PORT":     "9999",
+		"LANGUAGE":          "zh",
 	}
-	info := strings.ReplaceAll(stdout, "\n", "")
-	if len(info) == 0 || info == `""` {
-		panic(fmt.Sprintf("error `%s` find in /usr/local/bin/1pctl", param))
-	}
-	return info
+	return params[param]
+
+	// stdout, err := cmd.RunDefaultWithStdoutBashCf("grep '^%s=' /usr/local/bin/1pctl | cut -d'=' -f2", param)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// info := strings.ReplaceAll(stdout, "\n", "")
+	// if len(info) == 0 || info == `""` {
+	// 	panic(fmt.Sprintf("error `%s` find in /usr/local/bin/1pctl", param))
+	// }
+	// return info
 }
 
 func GetImagePrefix() string {
