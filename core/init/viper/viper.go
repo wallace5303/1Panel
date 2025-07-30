@@ -25,6 +25,13 @@ func Init() {
 	v := viper.NewWithOptions()
 	v.SetConfigType("yaml")
 
+	coreDir, _ := os.Getwd()
+	baseDir = path.Join(coreDir, "../data")
+	appYamlPath := path.Join(baseDir, "./1panel/conf/app.yaml")
+	fmt.Printf("baseDir: %+v\n", baseDir)
+	fmt.Printf("appYamlPath: %+v\n", appYamlPath)
+	//os.Exit(0)
+
 	config := global.ServerConfig{}
 	if err := yaml.Unmarshal(conf.AppYaml, &config); err != nil {
 		panic(err)
@@ -32,10 +39,10 @@ func Init() {
 	if config.Base.Mode != "" {
 		mode = config.Base.Mode
 	}
-	_, err := os.Stat("/opt/1panel/conf/app.yaml")
+	_, err := os.Stat(appYamlPath)
 	if mode == "dev" && err == nil {
 		v.SetConfigName("app")
-		v.AddConfigPath(path.Join("/opt/1panel/conf"))
+		v.AddConfigPath(path.Join(baseDir, "./1panel/conf"))
 		if err := v.ReadInConfig(); err != nil {
 			panic(fmt.Errorf("Fatal error config file: %s \n", err))
 		}
@@ -62,7 +69,7 @@ func Init() {
 	if err := v.Unmarshal(&serverConfig); err != nil {
 		panic(err)
 	}
-	_, err = os.Stat("/opt/1panel/conf/app.yaml")
+	_, err = os.Stat(appYamlPath)
 	if mode == "dev" && err == nil {
 		if serverConfig.Base.InstallDir != "" {
 			baseDir = serverConfig.Base.InstallDir

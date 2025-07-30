@@ -1,0 +1,5 @@
+[2025-07-30 14:42:40] [INFO] init logger successfully  
+[2025-07-30 14:42:40] [INFO] Migration run successfully  
+[2025-07-30 14:42:40] [INFO] init session successfully  
+[2025-07-30 14:42:45] [DEBUG] tar zxvfC /Users/gsx/www/gofile/src/common/1Panel/data/1panel/tmp/script/scripts.tar.gz /Users/gsx/www/gofile/src/common/1Panel/data/1panel/tmp/script  
+[2025-07-30 14:42:45] [INFO] listen at http://0.0.0.0:9999 [tcp4]  
