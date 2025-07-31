@@ -15,4 +15,4 @@ const (
 	ComposeOpRemove  = "remove"
 )
 
-var DaemonJsonPath = "/etc/docker/daemon.json"
+var DaemonJsonPath = "~/.docker/daemon.json"

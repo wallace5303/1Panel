@@ -3,6 +3,9 @@ package router
 import (
 	"encoding/base64"
 	"fmt"
+	"net/http"
+	"path"
+
 	"github.com/1Panel-dev/1Panel/core/app/service"
 	"github.com/1Panel-dev/1Panel/core/cmd/server/docs"
 	"github.com/1Panel-dev/1Panel/core/cmd/server/web"
@@ -15,8 +18,6 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"net/http"
-	"path"
 )
 
 var (
@@ -76,13 +77,13 @@ func Routers() *gin.Engine {
 
 	Router.Use(middleware.OperationLog())
 	Router.Use(middleware.GlobalLoading())
-	Router.Use(middleware.PasswordExpired())
+	//Router.Use(middleware.PasswordExpired())
 	Router.Use(middleware.WhiteAllow())
 	Router.Use(middleware.BindDomain())
-	Router.Use(middleware.ApiAuth())
+	//Router.Use(middleware.ApiAuth())
 
 	PrivateGroup := Router.Group("/api/v2/core")
-	PrivateGroup.Use(middleware.SetPasswordPublicKey())
+	//PrivateGroup.Use(middleware.SetPasswordPublicKey())
 	for _, router := range rou.RouterGroupApp {
 		router.InitRouter(PrivateGroup)
 	}
