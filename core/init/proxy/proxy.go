@@ -12,12 +12,14 @@ import (
 )
 
 var (
-	sockPath = path.Join(global.CONF.Base.InstallDir, "1panel/agent.sock")
+	sockPath = "/etc/1panel/agent.sock"
 
 	LocalAgentProxy *httputil.ReverseProxy
 )
 
 func Init() {
+	// [gsx] 重新赋值
+	sockPath = path.Join(global.CONF.Base.InstallDir, "1panel/agent.sock")
 	dialUnix := func(ctx context.Context, network, addr string) (net.Conn, error) {
 		return net.Dial("unix", sockPath)
 	}

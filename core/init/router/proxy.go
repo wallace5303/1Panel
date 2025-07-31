@@ -51,7 +51,6 @@ func Proxy() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-
 		if !strings.HasPrefix(c.Request.URL.Path, "/api/v2/core") && (currentNode == "local" || len(currentNode) == 0) {
 			sockPath := path.Join(global.CONF.Base.InstallDir, "1panel/agent.sock")
 			if _, err := os.Stat(sockPath); err != nil {
