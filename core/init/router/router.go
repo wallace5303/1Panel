@@ -75,6 +75,7 @@ func Routers() *gin.Engine {
 		Router.Use(middleware.DemoHandle())
 	}
 
+	// [gsx]
 	Router.Use(middleware.OperationLog())
 	Router.Use(middleware.GlobalLoading())
 	//Router.Use(middleware.PasswordExpired())
