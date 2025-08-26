@@ -39,9 +39,10 @@ func (u *AuthService) Login(c *gin.Context, info dto.Login, entrance string) (*d
 	if nameSetting.Value != info.Name {
 		return nil, "ErrAuth", buserr.New("ErrAuth")
 	}
-	if err = checkPassword(info.Password); err != nil {
-		return nil, "ErrAuth", err
-	}
+	// [gsx] 去掉密码验证
+	// if err = checkPassword(info.Password); err != nil {
+	// 	return nil, "ErrAuth", err
+	// }
 	entranceSetting, err := settingRepo.Get(repo.WithByKey("SecurityEntrance"))
 	if err != nil {
 		return nil, "", err
