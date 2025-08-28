@@ -2,11 +2,11 @@ package server
 
 import (
 	"crypto/tls"
-	"crypto/x509"
 	"fmt"
 	"net"
 	"net/http"
 	"os"
+	"path"
 
 	"github.com/1Panel-dev/1Panel/agent/app/repo"
 	"github.com/1Panel-dev/1Panel/agent/constant"
@@ -51,10 +51,12 @@ func Start() {
 		Handler: rootRouter,
 	}
 
+	agentSock := path.Join(global.CONF.Base.InstallDir, "1panel/agent.sock")
+	panelDir := path.Join(global.CONF.Base.InstallDir, "1panel")
 	if global.IsMaster {
-		_ = os.Remove("/etc/1panel/agent.sock")
-		_ = os.Mkdir("/etc/1panel", constant.DirPerm)
-		listener, err := net.Listen("unix", "/etc/1panel/agent.sock")
+		_ = os.Remove(agentSock)
+		_ = os.Mkdir(panelDir, constant.DirPerm)
+		listener, err := net.Listen("unix", agentSock)
 		if err != nil {
 			panic(err)
 		}
@@ -79,17 +81,9 @@ func Start() {
 			fmt.Printf("failed to load X.509 key pair: %s\n", err)
 			return
 		}
-
 		server.TLSConfig = &tls.Config{
 			Certificates: []tls.Certificate{tlsCert},
-			ClientAuth:   tls.RequireAndVerifyClientCert,
-		}
-		caItem, _ := settingRepo.GetValueByKey("RootCrt")
-		if len(caItem) != 0 {
-			caCertPool := x509.NewCertPool()
-			rootCrt, _ := encrypt.StringDecrypt(caItem)
-			caCertPool.AppendCertsFromPEM([]byte(rootCrt))
-			server.TLSConfig.ClientCAs = caCertPool
+			ClientAuth:   tls.RequireAnyClientCert,
 		}
 		business.Init()
 		global.LOG.Infof("listen at https://0.0.0.0:%s", global.CONF.Base.Port)
