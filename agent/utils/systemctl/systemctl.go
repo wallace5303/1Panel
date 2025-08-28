@@ -3,9 +3,11 @@ package systemctl
 import (
 	"bytes"
 	"fmt"
-	"github.com/pkg/errors"
 	"os/exec"
 	"strings"
+
+	"github.com/1Panel-dev/1Panel/agent/global"
+	"github.com/pkg/errors"
 )
 
 func RunSystemCtl(args ...string) (string, error) {
@@ -44,15 +46,22 @@ func isSnapServiceActive(serviceName string) bool {
 }
 
 func IsActive(serviceName string) (bool, error) {
-	out, err := RunSystemCtl("is-active", serviceName)
-	if err == nil {
-		return strings.TrimSpace(out) == "active", nil
+	// [gsx]
+	_, err := isDockerRunningMac()
+	if err != nil {
+		return false, err
 	}
+	return true, nil
 
-	if isSnapServiceActive(serviceName) {
-		return true, nil
-	}
-	return false, fmt.Errorf("service %s is not active: %v", serviceName, err)
+	// out, err := RunSystemCtl("is-active", serviceName)
+	// if err == nil {
+	// 	return strings.TrimSpace(out) == "active", nil
+	// }
+
+	// if isSnapServiceActive(serviceName) {
+	// 	return true, nil
+	// }
+	// return false, fmt.Errorf("service %s is not active: %v", serviceName, err)
 }
 
 func IsEnable(serviceName string) (bool, error) {
@@ -113,4 +122,23 @@ func Operate(operate, serviceName string) error {
 		return handlerErr(string(output), snapErr)
 	}
 	return handlerErr(out, err)
+}
+
+// 检查 macOS 系统上 Docker 是否运行
+func isDockerRunningMac() (bool, error) {
+	// 方法1: 检查 Docker 应用进程是否存在
+	cmd := exec.Command("pgrep", "docker")
+	if err := cmd.Run(); err != nil {
+		global.LOG.Errorf("docker not found, err: %v", err)
+		return false, err
+	}
+
+	// 方法2: 检查 Docker 守护进程连接
+	cmd = exec.Command("docker", "info")
+	if err := cmd.Run(); err != nil {
+		global.LOG.Errorf("docker info error, err: %v", err)
+		return false, err
+	}
+
+	return true, nil
 }

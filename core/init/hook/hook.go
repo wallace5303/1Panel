@@ -1,6 +1,8 @@
 package hook
 
 import (
+	"os"
+	"path"
 	"strings"
 
 	"github.com/1Panel-dev/1Panel/core/app/repo"
@@ -87,11 +89,16 @@ func generateKey() {
 }
 
 func initDockerConf() {
+	// [todo]
 	stdout, err := cmd.RunDefaultWithStdoutBashC("which docker")
 	if err != nil {
 		return
 	}
 	dockerPath := stdout
+
+	// [gsx]
+	userHomeDir, _ := os.UserHomeDir()
+	constant.DaemonJsonPath = path.Join(userHomeDir, ".docker/daemon.json")
 	if strings.Contains(dockerPath, "snap") {
 		constant.DaemonJsonPath = "/var/snap/docker/current/config/daemon.json"
 	}
