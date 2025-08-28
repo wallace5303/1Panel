@@ -1,5 +1,5 @@
 base:
-  install_dir: /opt
+  install_dir: 
   mode: dev
   is_demo: false
 
