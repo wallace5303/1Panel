@@ -24,7 +24,8 @@ func Run() {
 		interval model.Setting
 		status   model.Setting
 	)
-	go syncBeforeStart()
+	// [gsx]
+	//go syncBeforeStart()
 	if err := global.DB.Where("key = ?", "MonitorStatus").Find(&status).Error; err != nil {
 		global.LOG.Errorf("load monitor status from db failed, err: %v", err)
 	}
