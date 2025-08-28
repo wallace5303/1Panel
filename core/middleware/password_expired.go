@@ -15,6 +15,9 @@ import (
 
 func PasswordExpired() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// [gsx]
+		c.Next()
+		return
 		if strings.HasPrefix(c.Request.URL.Path, "/api/v2/core/auth") ||
 			c.Request.URL.Path == "/api/v2/core/settings/expired/handle" ||
 			c.Request.URL.Path == "/api/v2/core/settings/search" {

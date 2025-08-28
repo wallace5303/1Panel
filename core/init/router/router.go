@@ -62,8 +62,8 @@ func setWebStatic(rootRouter *gin.RouterGroup) {
 func Routers() *gin.Engine {
 	Router = gin.Default()
 	Router.Use(i18n.UseI18n())
-	Router.Use(middleware.WhiteAllow())
-	Router.Use(middleware.BindDomain())
+	//Router.Use(middleware.WhiteAllow())
+	//Router.Use(middleware.BindDomain())
 
 	swaggerRouter := Router.Group("1panel")
 	docs.SwaggerInfo.BasePath = "/api/v2"
@@ -77,13 +77,16 @@ func Routers() *gin.Engine {
 		Router.Use(middleware.DemoHandle())
 	}
 
+	// [gsx]
 	Router.Use(middleware.OperationLog())
 	Router.Use(middleware.GlobalLoading())
-	Router.Use(middleware.PasswordExpired())
-	Router.Use(middleware.ApiAuth())
+	//Router.Use(middleware.PasswordExpired())
+	Router.Use(middleware.WhiteAllow())
+	Router.Use(middleware.BindDomain())
+	//Router.Use(middleware.ApiAuth())
 
 	PrivateGroup := Router.Group("/api/v2/core")
-	PrivateGroup.Use(middleware.SetPasswordPublicKey())
+	//PrivateGroup.Use(middleware.SetPasswordPublicKey())
 	for _, router := range rou.RouterGroupApp {
 		router.InitRouter(PrivateGroup)
 	}
