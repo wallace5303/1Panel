@@ -1,12 +1,10 @@
 package router
 
 import (
-	"encoding/base64"
 	"fmt"
 	"net/http"
 	"path"
 
-	"github.com/1Panel-dev/1Panel/core/app/service"
 	"github.com/1Panel-dev/1Panel/core/cmd/server/docs"
 	"github.com/1Panel-dev/1Panel/core/cmd/server/web"
 	"github.com/1Panel-dev/1Panel/core/global"
@@ -33,27 +31,29 @@ func setWebStatic(rootRouter *gin.RouterGroup) {
 		staticServer := http.FileServer(http.FS(web.Assets))
 		staticServer.ServeHTTP(c.Writer, c.Request)
 	})
-	authService := service.NewIAuthService()
-	entrance := authService.GetSecurityEntrance()
-	if entrance != "" {
-		rootRouter.GET("/"+entrance, func(c *gin.Context) {
-			currentEntrance := authService.GetSecurityEntrance()
-			if currentEntrance != entrance {
-				security.HandleNotSecurity(c, "")
-				return
-			}
-			security.ToIndexHtml(c)
-		})
-	}
+	// [gsx]
+	// authService := service.NewIAuthService()
+	// entrance := authService.GetSecurityEntrance()
+	// if entrance != "" {
+	// 	rootRouter.GET("/"+entrance, func(c *gin.Context) {
+	// 		currentEntrance := authService.GetSecurityEntrance()
+	// 		if currentEntrance != entrance {
+	// 			security.HandleNotSecurity(c, "")
+	// 			return
+	// 		}
+	// 		security.ToIndexHtml(c)
+	// 	})
+	// }
 	rootRouter.GET("/", func(c *gin.Context) {
-		if !security.CheckSecurity(c) {
-			return
-		}
-		entrance = authService.GetSecurityEntrance()
-		if entrance != "" {
-			entranceValue := base64.StdEncoding.EncodeToString([]byte(entrance))
-			c.SetCookie("SecurityEntrance", entranceValue, 0, "", "", false, true)
-		}
+		// [gsx]
+		// if !security.CheckSecurity(c) {
+		// 	return
+		// }
+		// entrance = authService.GetSecurityEntrance()
+		// if entrance != "" {
+		// 	entranceValue := base64.StdEncoding.EncodeToString([]byte(entrance))
+		// 	c.SetCookie("SecurityEntrance", entranceValue, 0, "", "", false, true)
+		// }
 		staticServer := http.FileServer(http.FS(web.IndexHtml))
 		staticServer.ServeHTTP(c.Writer, c.Request)
 	})
