@@ -233,7 +233,7 @@ func LoadParams(param string) string {
 	params := map[string]string{
 		"BASE_DIR":          baseDir,
 		"ORIGINAL_VERSION":  "2.0.0",
-		"ORIGINAL_ENTRANCE": "gsx",
+		"ORIGINAL_ENTRANCE": "",
 		"ORIGINAL_USERNAME": "admin",
 		"ORIGINAL_PASSWORD": "admin",
 		"ORIGINAL_PORT":     "9999",
